@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inbox | StGo-Mail</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/inbox.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+</head>
+<body class="app-page">
+    
+    <div class="app-shell">
+        <!-- SIDEBAR -->
+        <aside class="sidebar glass-panel">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-paper-plane"></i>
+                    <span>StGo-Mail</span>
+                </div>
+            </div>
+
+            <button class="btn btn-primary compose-btn" id="openCompose">
+                <i class="fas fa-plus"></i>
+                <span>Compose</span>
+            </button>
+
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-folder="inbox">
+                    <i class="fas fa-inbox"></i>
+                    <span>Inbox</span>
+                    <span class="count" id="inboxCount">0</span>
+                </a>
+                <a href="#" class="nav-item" data-folder="sent">
+                    <i class="fas fa-paper-plane"></i>
+                    <span>Sent</span>
+                </a>
+                <a href="#" class="nav-item" data-folder="drafts">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Drafts</span>
+                </a>
+                <a href="#" class="nav-item" data-folder="starred">
+                    <i class="fas fa-star"></i>
+                    <span>Starred</span>
+                </a>
+                <a href="#" class="nav-item" data-folder="contacts">
+                    <i class="fas fa-address-book"></i>
+                    <span>Contacts</span>
+                </a>
+                <a href="#" class="nav-item" data-folder="trash">
+                    <i class="fas fa-trash"></i>
+                    <span>Trash</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="storage-info">
+                    <div class="storage-label">
+                        <span>Storage</span>
+                        <span>75%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 75%"></div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- TOPBAR -->
+        <header class="topbar glass">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search mail, contacts, or dates...">
+                <button class="filter-btn"><i class="fas fa-sliders-h"></i></button>
+            </div>
+
+            <div class="topbar-actions">
+                <button class="icon-btn"><i class="fas fa-circle-question"></i></button>
+                <button class="icon-btn"><i class="fas fa-cog"></i></button>
+                <div class="user-profile" id="userProfile">
+                    <img src="https://ui-avatars.com/api/?name=User&background=6c8cff&color=fff" alt="Avatar" id="userAvatar">
+                    <div class="user-dropdown glass-panel hidden" id="userDropdown">
+                        <div class="dropdown-header">
+                            <p class="user-name" id="userName">Loading...</p>
+                            <p class="user-email" id="userEmail">...</p>
+                        </div>
+                        <hr>
+                        <a href="#"><i class="fas fa-user-circle"></i> Profile</a>
+                        <a href="#"><i class="fas fa-shield-alt"></i> Security</a>
+                        <hr>
+                        <a href="#" id="logoutBtn" class="text-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <div class="content-header">
+                <h1 id="viewTitle">Inbox</h1>
+                <div class="view-actions">
+                    <button class="icon-btn" title="Refresh"><i class="fas fa-sync-alt"></i></button>
+                    <button class="icon-btn" title="Mark all read"><i class="fas fa-envelope-open"></i></button>
+                    <div class="pagination">
+                        <span>1-50 of 120</span>
+                        <button class="icon-btn"><i class="fas fa-chevron-left"></i></button>
+                        <button class="icon-btn"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="inboxView" class="view-container">
+                <div class="mail-list-container glass-panel">
+                    <div id="mailList" class="mail-list">
+                        <!-- Loading Skeleton -->
+                        <div class="mail-item skeleton"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="contactsView" class="view-container hidden">
+                <div class="glass-panel" style="padding: 30px;">
+                    <h2>Contact Manager</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 20px;">Manage your futuristic network.</p>
+                    <div id="contactList" class="contact-list">
+                        <!-- Contacts go here -->
+                        <p>No contacts yet. Start communicating!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="settingsView" class="view-container hidden">
+                <div class="glass-panel" style="padding: 30px;">
+                    <h2>Settings</h2>
+                    <div class="settings-group">
+                        <h3>Appearance</h3>
+                        <div class="theme-selector">
+                            <button class="theme-btn active">Classic</button>
+                            <button class="theme-btn">Neon</button>
+                            <button class="theme-btn">Cyber</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- FLOATING COMPOSER -->
+    <div class="composer-overlay hidden" id="composer">
+        <div class="composer-card glass-panel animate-fade">
+            <div class="composer-header">
+                <span>New Message</span>
+                <div class="composer-actions">
+                    <button id="minimizeCompose"><i class="fas fa-minus"></i></button>
+                    <button id="closeCompose"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+            <div class="composer-body">
+                <input type="text" id="mailTo" placeholder="Recipients">
+                <input type="text" id="mailSubject" placeholder="Subject">
+                <textarea id="mailBody" placeholder="Write your futuristic message..."></textarea>
+            </div>
+            <div class="composer-footer">
+                <div class="format-tools">
+                    <button title="Bold"><i class="fas fa-bold"></i></button>
+                    <button title="Italic"><i class="fas fa-italic"></i></button>
+                    <button title="Attachment" id="attachBtn"><i class="fas fa-paperclip"></i></button>
+                    <button title="Emoji"><i class="fas fa-smile"></i></button>
+                </div>
+                <button class="btn btn-primary" id="sendBtn">
+                    <span>Send</span>
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="firebase/firebase-config.js"></script>
+    <script src="firebase/auth.js"></script>
+    <script src="services/mailService.js"></script>
+    <script src="services/notificationService.js"></script>
+    <script src="assets/js/inbox.js"></script>
+</body>
+</html>
