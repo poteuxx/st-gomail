@@ -49,6 +49,9 @@ const authService = {
       return userCredential.user;
     } catch (error) {
       console.error("Login Error:", error);
+      if (error.code === 'auth/unauthorized-domain') {
+          throw new Error("This domain is not authorized in Firebase Console. Please add 'poteuxx.github.io' to Authorized Domains.");
+      }
       throw error;
     }
   },

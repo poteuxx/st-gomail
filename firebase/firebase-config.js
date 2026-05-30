@@ -1,4 +1,4 @@
-// Firebase Configuration
+// Firebase Configuration - Senior Refined Version
 const firebaseConfig = {
   apiKey: "AIzaSyDKaoMe0t8N-XvQvfIoVT58R34IXjqY6bU",
   authDomain: "st-gomail.firebaseapp.com",
@@ -8,14 +8,21 @@ const firebaseConfig = {
   appId: "1:501733449757:web:710ecf8b1ed9627125e6f4"
 };
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+// Initialize Firebase with safety check
+try {
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+    console.log("🚀 StGo-Mail: Firebase initialized successfully.");
+  }
+} catch (error) {
+  console.error("❌ StGo-Mail: Firebase initialization failed:", error);
+}
 
 const auth = firebase.auth();
 const db = firebase.firestore();
 const storage = firebase.storage();
 
-// Exporting to global scope for non-module compatibility or using as a script
+// Global Access Bridge
 window.fb = {
   auth,
   db,
