@@ -42,10 +42,16 @@
                 </div>
 
                 <div class="input-group">
-                    <label for="email">Email Address</label>
-                    <div class="input-wrapper">
+                    <label for="emailPrefix">New Email Identity</label>
+                    <div class="input-wrapper email-split">
                         <i class="fas fa-envelope"></i>
-                        <input type="email" id="email" placeholder="name@domain.com" required>
+                        <input type="text" id="emailPrefix" placeholder="identity" required>
+                        <select id="emailDomain" required>
+                            <option value="@stgo.mail">@stgo.mail</option>
+                            <option value="@futur.st">@futur.st</option>
+                            <option value="@poteuxx.io">@poteuxx.io</option>
+                            <option value="@st.gomail">@st.gomail</option>
+                        </select>
                     </div>
                 </div>
 
@@ -141,6 +147,32 @@
             color: var(--primary);
         }
 
+        .email-split {
+            display: flex;
+            gap: 10px;
+        }
+
+        .email-split input {
+            flex: 1;
+        }
+
+        .email-split select {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            color: white;
+            padding: 0 15px;
+            outline: none;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            min-width: 140px;
+        }
+
+        .email-split select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px var(--primary-glow);
+        }
+
         .suggestions {
             display: flex;
             flex-wrap: wrap;
@@ -207,7 +239,10 @@
 
         registerForm.onsubmit = async (e) => {
             e.preventDefault();
-            const email = document.getElementById('email').value;
+            const prefix = document.getElementById('emailPrefix').value;
+            const domain = document.getElementById('emailDomain').value;
+            const email = prefix + domain;
+            
             const pass = document.getElementById('password').value;
             const name = displayNameInput.value;
             const user = usernameInput.value;
