@@ -20,12 +20,10 @@ try {
 
 const auth = firebase.auth();
 const db = firebase.firestore();
-const storage = firebase.storage();
 
 // Global Access Bridge
 window.fb = {
   auth,
   db,
-  storage,
   FieldValue: firebase.firestore.FieldValue
 };
