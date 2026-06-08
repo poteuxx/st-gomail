@@ -109,6 +109,31 @@ document.addEventListener('DOMContentLoaded', () => {
         viewTitle.innerText = title;
     }
 
+    // Topbar & Profile Actions
+    const topSettingsBtn = document.querySelector('.topbar-actions .fa-cog')?.parentElement;
+    if (topSettingsBtn) {
+        topSettingsBtn.onclick = () => {
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            showView('settingsView', 'Settings');
+            populateSettings();
+        };
+    }
+
+    // Link dropdown items
+    const dropdownProfileLink = document.querySelector('#userDropdown a:nth-of-type(1)');
+    const dropdownSecurityLink = document.querySelector('#userDropdown a:nth-of-type(2)');
+    
+    if (dropdownProfileLink) dropdownProfileLink.onclick = (e) => { 
+        e.preventDefault(); 
+        showView('settingsView', 'Settings'); 
+        populateSettings(); 
+    };
+    if (dropdownSecurityLink) dropdownSecurityLink.onclick = (e) => { 
+        e.preventDefault(); 
+        showView('settingsView', 'Settings'); 
+        populateSettings(); 
+    };
+
     async function populateSettings() {
         const userData = await window.authService.getCurrentUserData();
         if (userData) {
