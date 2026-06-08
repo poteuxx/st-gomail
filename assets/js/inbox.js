@@ -278,7 +278,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     userProfile.onclick = (e) => { e.stopPropagation(); userDropdown.classList.toggle('hidden'); };
     document.onclick = () => userDropdown.classList.add('hidden');
-    document.getElementById('logoutBtn').onclick = () => window.authService.logout();
+    document.getElementById('logoutBtn').onclick = (e) => {
+        e.preventDefault();
+        window.authService.logout();
+    };
 
     // 7. Mail Reader
     function openMail(mail) {
