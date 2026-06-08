@@ -23,6 +23,13 @@
         "alreadyHaveId": "Already have an ID?",
         "loginHere": "Login here"
     },
+    "settings": {
+        "title": "Identity Settings",
+        "profile": "Profile Management",
+        "language": "System Language",
+        "theme": "Atmospheric Theme",
+        "save": "Save Changes"
+    },
     "inbox": {
         "search": "Search identity...",
         "compose": "Compose",

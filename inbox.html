@@ -16,6 +16,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
     <script src="services/cryptoService.js"></script>
     <script src="services/i18n.js"></script>
+    <script src="services/userService.js"></script>
 </head>
 <body class="app-page">
     
@@ -143,16 +144,41 @@
 
             <div id="settingsView" class="view-container hidden">
                 <div class="glass-panel" style="padding: 30px;">
-                    <h2>Settings</h2>
+                    <h2 data-i18n="settings.title">Settings</h2>
+                    
+                    <!-- Profile Section -->
                     <div class="settings-group">
-                        <h3>Language</h3>
+                        <h3 data-i18n="settings.profile">Profile Management</h3>
+                        <div class="profile-edit-grid">
+                            <div class="input-group">
+                                <label data-i18n="auth.displayName">Display Name</label>
+                                <input type="text" id="editDisplayName" placeholder="Enter new name...">
+                            </div>
+                            <div class="input-group">
+                                <label>Avatar URL</label>
+                                <input type="text" id="editAvatarURL" placeholder="https://image-url.com/me.png">
+                            </div>
+                            <button class="btn btn-primary" id="saveProfileBtn">
+                                <span data-i18n="settings.save">Save Changes</span>
+                                <i class="fas fa-save"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <hr class="settings-divider">
+
+                    <div class="settings-group">
+                        <h3 data-i18n="settings.language">Language</h3>
                         <div class="lang-selector">
                             <button class="btn btn-ghost" onclick="window.i18n.setLocale('en')">English</button>
                             <button class="btn btn-ghost" onclick="window.i18n.setLocale('fr')">Français</button>
                         </div>
                     </div>
+                    
+                    <hr class="settings-divider">
+
                     <div class="settings-group">
-                        <h3>Appearance</h3>
+                        <h3 data-i18n="settings.theme">Appearance</h3>
                         <div class="theme-selector">
                             <button class="theme-btn active">Classic</button>
                             <button class="theme-btn">Neon</button>

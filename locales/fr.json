@@ -23,6 +23,13 @@
         "alreadyHaveId": "Vous avez déjà un ID ?",
         "loginHere": "Connectez-vous ici"
     },
+    "settings": {
+        "title": "Paramètres d'Identité",
+        "profile": "Gestion du Profil",
+        "language": "Langue du Système",
+        "theme": "Thème Atmosphérique",
+        "save": "Enregistrer les modifications"
+    },
     "inbox": {
         "search": "Rechercher une identité...",
         "compose": "Composer",

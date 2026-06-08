@@ -93,6 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     break;
                 case 'settings':
                     showView('settingsView', 'Settings');
+                    populateSettings();
                     break;
                 default:
                     showView('inboxView', folder.charAt(0).toUpperCase() + folder.slice(1));
@@ -107,6 +108,38 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById(viewId).classList.remove('hidden');
         viewTitle.innerText = title;
     }
+
+    async function populateSettings() {
+        const userData = await window.authService.getCurrentUserData();
+        if (userData) {
+            document.getElementById('editDisplayName').value = userData.displayName || '';
+            document.getElementById('editAvatarURL').value = userData.avatar || '';
+        }
+    }
+
+    document.getElementById('saveProfileBtn').onclick = async () => {
+        const name = document.getElementById('editDisplayName').value;
+        const avatar = document.getElementById('editAvatarURL').value;
+        const btn = document.getElementById('saveProfileBtn');
+
+        try {
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            
+            await window.userService.updateProfile({ displayName: name, avatar: avatar });
+            
+            // Refresh Header UI
+            document.getElementById('userName').innerText = name;
+            document.getElementById('userAvatar').src = avatar || `https://ui-avatars.com/api/?name=${name}&background=6c8cff&color=fff`;
+            
+            window.notif.success("Identity updated successfully.");
+        } catch (e) {
+            window.notif.error("Failed to update profile: " + e.message);
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<span data-i18n="settings.save">Save Changes</span> <i class="fas fa-save"></i>';
+        }
+    };
 
     function loadFolder(folder) {
         currentFolder = folder;
