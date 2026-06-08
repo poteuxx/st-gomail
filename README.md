@@ -1,74 +1,72 @@
-# StGo-Mail (v2.0 Pulsar Edition)
+# StGo-Mail (v2.1 Pulsar Edition)
 
 ![StGo-Mail Logo](https://raw.githubusercontent.com/SolutionsTechnologies/StGo-Mail/main/assets/images/logo.png)
 
-> **The Future of Communication, Redefined.**
+> **The Future of Private Communication, Redefined with E2EE and Real-World Connectivity.**
 
-StGo-Mail is a premium, futuristic email platform designed for high-productivity environments. Inspired by the clean layout of Google Workspace but infused with the vibrant "Poteuxx" neon-glassmorphism aesthetic, it offers a seamless and stunning user experience.
+StGo-Mail is a premium, futuristic email platform designed for high-privacy environments. Infused with the vibrant "Poteuxx" neon-glassmorphism aesthetic, it offers a secure, stunning, and globally connected user experience.
 
-## ✨ Features
+## ✨ Pulsar Version 2.1 Enhancements
 
-- 💎 **Futuristic UI/UX**: Premium glassmorphism effects, neon glows, and smooth CSS animations.
-- 🔐 **Secure Identity System**: complete Authentication via Firebase (Email/Password or Username login).
-- 📧 **Advanced Email Ecosystem**:
-  - Full Inbox, Sent, Drafts, Starred, and Trash management.
-  - Real-time new message notifications.
-  - Floating Gmail-style Composer with rich text capabilities.
-- 🔍 **Pulsar Search Engine**: Instant search across subjects, senders, and content.
-- 👥 **Contact Manager**: Organize your futuristic network efficiently.
-- 📊 **Dynamic Dashboard**: Real-time statistics on storage usage and email activity.
-- 📱 **Fully Responsive**: Optimized for Desktop, Tablet, and Mobile.
-- 🎨 **Theme Engine**: Support for Classic, Neon, and Cyber themes.
+- 🔐 **Double-Shield End-to-End Encryption (E2EE)**: 
+  - Industry-standard **RSA-2048** and **AES-GCM 256** encryption.
+  - Messages are encrypted on the sender's device and decrypted only on the recipient's device. 
+  - **Not even the server can read your private communications.**
+- 🌍 **Global Localization (i18n)**:
+  - Full support for **Multi-language** environments.
+  - Switch between **English** and **French** instantly from the settings.
+  - Persistent language preferences via local storage.
+- 🌉 **Real-World Mail Bridge**:
+  - Receive "real" external emails (OTP codes, verification links) from any service (Google, Netflix, Banks, etc.).
+  - Automatic background synchronization with functional external aliases.
+  - Dedicated **BRIDGE** tags for external mail clarity.
+- 🎨 **Perfected Interaction Physics**:
+  - **Modern Slide-in Reader**: A high-end glassmorphic reading experience with fluid transitions.
+  - **Real-Time UI**: Instant star-toggling, deletion, and message sync without page reloads.
+  - **Staggered Animations**: Enhanced "Poteuxx" slide-in effects for a premium feel.
 
-## 🚀 Technology Stack
+## 🚀 Core Technology Stack
 
 - **Frontend**: HTML5 Semantic Structure, Vanilla CSS (Glassmorphism & Neon).
-- **Logic**: Modern Javascript (ES6+) with Modular Architecture.
-- **Backend-as-a-Service**: Firebase Core.
-  - **Firestore**: Real-time NoSQL database for mails and user data.
-  - **Auth**: Secure session management and identity.
-  - **Storage**: Handling attachments and user avatars.
-- **Icons**: FontAwesome 6 Pro & Lucide.
-- **Fonts**: Inter (Google Fonts).
+- **Security**: Web Crypto API (RSA/AES), Secure Identity Mapping.
+- **Backend-as-a-Service**: Firebase Suite (Firestore, Auth, Storage).
+- **Connectivity**: 1secmail API Bridge for external mail reception.
+- **Interactions**: Custom GSAP-style CSS animations and modular JS architecture.
 
 ## 📂 Project Architecture
 
 ```text
 StGo-Mail/
-├── index.html          # Landing Page & Redirection
-├── login.html          # Secure Identity Access
-├── register.html       # Identity Creation
-├── inbox.html          # Main Application Hub
+├── index.html          # Premium Landing Page & Redirection
+├── login.html          # Secure Identity Access (Localized)
+├── register.html       # Identity Creation (Bridge-enabled)
+├── inbox.html          # Main Application Hub (Pulsar Interface)
+├── locales/            # i18n Translation Files (EN/FR)
+├── services/
+│   ├── cryptoService.js # E2EE Engine (Web Crypto)
+│   ├── i18n.js          # Localization Service
+│   ├── mailService.js   # Email Ops & World Bridge Sync
+│   └── notificationService.js # UX Toasts
 ├── assets/
 │   ├── css/            # Main & View-specific styling
-│   ├── js/             # Application Logic
-│   └── images/         # Visual Assets
-├── firebase/
-│   ├── firebase-config.js # Connectivity
-│   ├── auth.js          # Security Logic
-│   └── firestore.js     # Data Handlers
-├── services/
-│   ├── mailService.js   # Email Operations
-│   ├── notificationService.js # UX Toasts
-│   └── userService.js   # Profile Management
-└── components/         # Reusable UI Blocks
+│   └── js/             # Application Logic (inbox.js)
+└── firebase/           # Connectivity & Auth logic
 ```
 
-## 🛠️ Status & Updates
+## 🛠️ Status & Implementation
 
-**Current Version**: `2.0.0-alpha`
-**Status**: `Production Ready Architecture`
+**Current Version**: `2.1.0`
+**Status**: `Production Stable`
 
-- [x] Complete UI Overhaul (Poteuxx Style)
-- [x] Firebase Integration (Auth/Firestore)
-- [x] Real-time Messaging System
-- [x] Advanced Search Engine
-- [x] Responsive Layout Implementation
-- [x] Toast Notification System
-- [ ] Multi-language Support (Planned for 2.1)
-- [ ] End-to-end Encryption (Planned for 3.0)
+- [x] **Double-Shield E2EE Implementation**
+- [x] **Multi-language Support (i18n)**
+- [x] **Real-World External Mail Bridge**
+- [x] **Premium UI Overhaul (Pulsar Design)**
+- [x] **Real-time Messaging & Notifications**
+- [x] **Identity Identity Mapping (@stgo.io, @identity.io, etc.)**
 
 ---
 
-**Developed by Antigravity (Powered by DeepMind)**
-*SolutionsTechnologies Branding - 2026*
+**Developed by Antigravity (Powered by Google DeepMind)**  
+*SolutionsTechnologies Branding - 2026*  
+[poteuxx.github.io/st-gomail](https://poteuxx.github.io/st-gomail)

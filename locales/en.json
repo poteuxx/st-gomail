@@ -1,0 +1,46 @@
+{
+    "landing": {
+        "title": "The Future of Communication is Here.",
+        "subtitle": "Experience the most advanced, secure, and futuristic email platform ever built. Inspired by Google, designed for the next generation.",
+        "getStarted": "Get Started Free",
+        "login": "Login",
+        "join": "Join Now",
+        "version": "Version 2.0 - Pulsar Edition",
+        "stats": {
+            "users": "Users",
+            "uptime": "Uptime"
+        },
+        "featuresTitle": "Unmatched Intelligence."
+    },
+    "auth": {
+        "createIdentity": "Create Identity",
+        "startJourney": "Start your journey in the futurist workspace.",
+        "displayName": "Display Name",
+        "username": "Username",
+        "newIdentity": "New Email Identity",
+        "password": "Password",
+        "finalize": "Finalize Identity",
+        "alreadyHaveId": "Already have an ID?",
+        "loginHere": "Login here"
+    },
+    "inbox": {
+        "search": "Search identity...",
+        "compose": "Compose",
+        "folders": {
+            "inbox": "Inbox",
+            "sent": "Sent",
+            "starred": "Starred",
+            "trash": "Trash",
+            "spam": "Spam"
+        },
+        "noMessages": "No messages found.",
+        "secureConnection": "Secure End-to-End Encrypted Tunnel Active",
+        "reader": {
+            "back": "Back",
+            "reply": "Reply",
+            "forward": "Forward",
+            "delete": "Delete",
+            "encryptedNotice": "This message is End-to-End Encrypted."
+        }
+    }
+}

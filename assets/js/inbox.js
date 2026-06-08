@@ -11,17 +11,37 @@ document.addEventListener('DOMContentLoaded', () => {
         const userData = await window.authService.getCurrentUserData();
         if (userData) {
             document.getElementById('userName').innerText = userData.displayName;
-            document.getElementById('userEmail').innerText = userData.email;
+            
+            // Show Real Alias in dropdown header
+            const emailFull = document.getElementById('userEmail');
+            emailFull.innerHTML = `${userData.email}<br><span style="color:var(--secondary); font-size:0.75rem">Bridge: ${userData.realAlias}</span>`;
+
             if (userData.avatar) {
                 document.getElementById('userAvatar').src = userData.avatar;
             }
+
+            // Start Real World Sync
+            startMailBridge(userData.realAlias);
         }
 
         // Initialize Inbox
         loadFolder('inbox');
         updateStats();
         setupRealTimeNotifications();
+
+        window.addEventListener('localeChanged', () => {
+            loadFolder(currentFolder);
+        });
     });
+
+    function startMailBridge(realAlias) {
+        // Initial sync
+        window.mailService.syncExternalMails(realAlias);
+        // Sync every 20 seconds
+        setInterval(() => {
+            window.mailService.syncExternalMails(realAlias);
+        }, 20000);
+    }
 
     // 2. UI Elements & State
     const mailList = document.getElementById('mailList');
@@ -154,14 +174,21 @@ document.addEventListener('DOMContentLoaded', () => {
         mails.forEach(mail => {
             const time = mail.timestamp ? new Date(mail.timestamp.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Pending...';
             
+            const encryptionBadge = mail.isEncrypted ? `<span class="e2ee-tag" title="End-to-End Encrypted"><i class="fas fa-lock"></i></span>` : '';
+            const systemBadge = mail.isSystem ? `<span class="system-tag">${mail.isExternal ? 'BRIDGE' : 'SYSTEM'}</span>` : '';
+            const starColor = mail.starred ? '#ffcc00' : 'var(--text-dim)';
+            const starClass = mail.starred ? 'fas fa-star' : 'far fa-star';
+
             const item = document.createElement('div');
-            item.className = `mail-item ${!mail.read ? 'unread' : ''}`;
+            item.className = `mail-item ${!mail.read ? 'unread' : ''} animate-slide-in`;
             item.innerHTML = `
-                <div class="mail-star"><i class="${mail.starred ? 'fas' : 'far'} fa-star" style="color: ${mail.starred ? '#ffcc00' : 'var(--text-dim)'}"></i></div>
-                <div class="from">${mail.fromName || mail.from}</div>
+                <div class="mail-star" onclick="event.stopPropagation(); toggleMailStar('${mail.id}', ${!mail.starred})">
+                    <i class="${starClass}" style="color: ${starColor}"></i>
+                </div>
+                <div class="from">${systemBadge}${mail.fromName || mail.from}</div>
                 <div class="subject-row">
-                    <span class="subject">${mail.subject}</span>
-                    <span class="preview"> - ${mail.body.substring(0, 80)}...</span>
+                    <span class="subject">${encryptionBadge}${mail.subject}</span>
+                    <span class="preview"> - ${mail.body.substring(0, 100).replace(/<[^>]*>?/gm, '')}...</span>
                 </div>
                 <div class="time">${time}</div>
             `;
@@ -171,6 +198,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    window.toggleMailStar = async (id, status) => {
+        try {
+            await window.mailService.toggleStar(id, status);
+            // Snapshot will update the UI automatically
+        } catch (e) {
+            console.error("Star toggle failed", e);
+        }
+    };
+
     // 4. Composer Logic
     document.getElementById('openCompose').onclick = () => composer.classList.remove('hidden');
     document.getElementById('closeCompose').onclick = () => composer.classList.add('hidden');
@@ -179,32 +215,39 @@ document.addEventListener('DOMContentLoaded', () => {
         const to = document.getElementById('mailTo').value;
         const subject = document.getElementById('mailSubject').value;
         const body = document.getElementById('mailBody').value;
+        const btn = document.getElementById('sendBtn');
 
         if (!to || !body) {
-            alert("Please fill in recipient and message.");
+            window.notif.error("Recipient and message are required.");
             return;
         }
 
         try {
-            const btn = document.getElementById('sendBtn');
             btn.disabled = true;
-            btn.innerHTML = 'Sending...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
 
             await window.mailService.sendEmail({ to, subject, body });
             
-            composer.classList.add('hidden');
-            // Reset fields
-            document.getElementById('mailTo').value = '';
-            document.getElementById('mailSubject').value = '';
-            document.getElementById('mailBody').value = '';
-            
-            alert("Message sent successfully!");
+            closeComposer();
+            window.notif.success("Message transmitted successfully!");
         } catch (error) {
-            alert("Error: " + error.message);
+            window.notif.error("Transmission failed: " + error.message);
         } finally {
             btn.disabled = false;
             btn.innerHTML = '<span>Send</span> <i class="fas fa-paper-plane"></i>';
         }
+    };
+
+    function closeComposer() {
+        composer.classList.add('hidden');
+        document.getElementById('mailTo').value = '';
+        document.getElementById('mailSubject').value = '';
+        document.getElementById('mailBody').value = '';
+    }
+
+    document.getElementById('openCompose').onclick = () => {
+        composer.classList.remove('hidden');
+        document.getElementById('mailTo').focus();
     };
 
     // 5. User Dropdown
@@ -223,39 +266,67 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!reader) {
             reader = document.createElement('div');
             reader.id = 'mailReader';
-            reader.className = 'mail-reader-overlay glass-panel animate-fade';
+            reader.className = 'mail-reader-overlay glass-panel';
             document.body.appendChild(reader);
         }
 
+        const timeFull = mail.timestamp ? new Date(mail.timestamp.seconds * 1000).toLocaleString() : 'Pending...';
+        const encryptionStatus = mail.isEncrypted ? `<div class="encryption-notice"><i class="fas fa-shield-halved"></i> ${window.i18n.t('inbox.reader.encryptedNotice')}</div>` : '';
+
         reader.innerHTML = `
-            <div class="reader-card">
+            <div class="reader-card animate-fade">
                 <div class="reader-header">
-                    <button onclick="document.getElementById('mailReader').remove()"><i class="fas fa-arrow-left"></i> Back to Inbox</button>
+                    <button class="back-btn" onclick="closeMailReader()" title="${window.i18n.t('inbox.reader.back')}"><i class="fas fa-arrow-left"></i></button>
                     <div class="reader-actions">
-                        <button><i class="fas fa-star"></i></button>
-                        <button><i class="fas fa-reply"></i></button>
-                        <button><i class="fas fa-trash"></i></button>
+                        <button onclick="toggleMailStar('${mail.id}', ${!mail.starred})" title="Star"><i class="${mail.starred ? 'fas' : 'far'} fa-star" style="color: ${mail.starred ? '#ffcc00' : 'inherit'}"></i></button>
+                        <button onclick="deleteMail('${mail.id}')" title="${window.i18n.t('inbox.reader.delete')}"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>
                 <div class="reader-content">
-                    <h1>${mail.subject}</h1>
+                    <h1 class="mail-title-big">${mail.subject}</h1>
+                    ${encryptionStatus}
                     <div class="sender-info">
-                        <img src="https://ui-avatars.com/api/?name=${mail.fromName || mail.from}&background=random" class="avatar-sm">
-                        <div>
-                            <p class="name">${mail.fromName || mail.from}</p>
-                            <p class="email">${mail.from} to me</p>
+                        <img src="https://ui-avatars.com/api/?name=${mail.fromName || mail.from}&background=6c8cff&color=fff" class="avatar-sm">
+                        <div class="sender-details">
+                            <div class="top-row">
+                                <p class="name">${mail.fromName || mail.from}</p>
+                                <span class="full-time">${timeFull}</span>
+                            </div>
+                            <p class="email">${mail.from} &lt;to me&gt;</p>
                         </div>
                     </div>
-                    <div class="mail-body">
+                    <div class="mail-body-content">
                         ${mail.body.replace(/\n/g, '<br>')}
+                    </div>
+                    <div class="reader-footer">
+                         <button class="btn btn-ghost"><i class="fas fa-reply"></i> ${window.i18n.t('inbox.reader.reply')}</button>
+                         <button class="btn btn-ghost"><i class="fas fa-share"></i> ${window.i18n.t('inbox.reader.forward')}</button>
                     </div>
                 </div>
             </div>
         `;
-        reader.classList.remove('hidden');
+        reader.classList.add('active');
+        document.body.style.overflow = 'hidden';
 
         if (!mail.read) {
             window.mailService.toggleRead(mail.id, true);
         }
     }
+
+    window.closeMailReader = () => {
+        const reader = document.getElementById('mailReader');
+        if (reader) {
+            reader.classList.remove('active');
+            setTimeout(() => {
+                document.body.style.overflow = '';
+            }, 300);
+        }
+    };
+
+    window.deleteMail = async (id) => {
+        if (confirm("Move this message to trash?")) {
+            await window.mailService.moveToTrash(id);
+            closeMailReader();
+        }
+    };
 });

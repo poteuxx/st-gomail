@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="services/i18n.js"></script>
 </head>
 <body class="landing-page">
 
@@ -18,30 +19,31 @@
             <span>StGo-Mail</span>
         </div>
         <div class="nav-links">
-            <a href="login.html" class="btn btn-ghost">Login</a>
-            <a href="register.html" class="btn btn-primary">Join Now</a>
+            <a href="login.html" class="btn btn-ghost" data-i18n="landing.login">Login</a>
+            <a href="register.html" class="btn btn-primary" data-i18n="landing.join">Join Now</a>
         </div>
     </nav>
 
     <main class="hero-section">
         <div class="hero-content animate-fade">
-            <span class="badge">Version 2.0 - Pulsar Edition</span>
-            <h1>The Future of <span>Communication</span> is Here.</h1>
-            <p>Experience the most advanced, secure, and futuristic email platform ever built. Inspired by Google, designed for the next generation.</p>
+            <div class="glow-sphere"></div>
+            <span class="badge" data-i18n="landing.version">Version 2.0 - Pulsar Edition</span>
+            <h1 data-i18n="landing.title">The Future of <span>Communication</span> is Here.</h1>
+            <p data-i18n="landing.subtitle">Experience the most advanced, secure, and futuristic email platform ever built. Inspired by Google, designed for the next generation.</p>
             
             <div class="hero-cta">
                 <a href="register.html" class="btn btn-primary btn-lg">
-                    Get Started Free
+                    <span data-i18n="landing.getStarted">Get Started Free</span>
                     <i class="fas fa-bolt"></i>
                 </a>
                 <div class="stats-mini">
                     <div class="stat-item">
                         <span class="val">1M+</span>
-                        <span class="lab">Users</span>
+                        <span class="lab" data-i18n="landing.stats.users">Users</span>
                     </div>
                     <div class="stat-item">
                         <span class="val">99.9%</span>
-                        <span class="lab">Uptime</span>
+                        <span class="lab" data-i18n="landing.stats.uptime">Uptime</span>
                     </div>
                 </div>
             </div>
@@ -66,10 +68,63 @@
         </div>
     </main>
 
+    <section class="features-section">
+        <div class="section-header">
+            <h2 data-i18n="landing.featuresTitle">Unmatched Intelligence.</h2>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card glass-panel">
+                <i class="fas fa-shield-halved"></i>
+                <h3>End-to-End Encryption</h3>
+                <p>Your messages are yours alone. Not even we can read them.</p>
+            </div>
+            <div class="feature-card glass-panel">
+                <i class="fas fa-bolt"></i>
+                <h3>Instant Sync</h3>
+                <p>Global edge delivery ensures your mail arrives in milliseconds.</p>
+            </div>
+            <div class="feature-card glass-panel">
+                <i class="fas fa-globe"></i>
+                <h3>Global Identity</h3>
+                <p>Choose your domain and create your unique digital signature.</p>
+            </div>
+        </div>
+    </section>
+
     <style>
         .landing-page {
             background: var(--bg-deep);
             overflow-x: hidden;
+            position: relative;
+        }
+
+        .landing-page::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+            z-index: -1;
+            filter: blur(80px);
+            opacity: 0.4;
+        }
+
+        .glow-sphere {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: var(--accent);
+            filter: blur(60px);
+            opacity: 0.2;
+            z-index: -1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-20px) translateX(10px); }
         }
 
         .landing-nav {
@@ -185,6 +240,50 @@
         .mock-content { flex: 1; padding: 20px; }
         .mock-line { height: 12px; background: rgba(255,255,255,0.05); margin-bottom: 12px; border-radius: 6px; }
         .mock-line.short { width: 60%; }
+
+        .features-section {
+            padding: 100px 10%;
+            text-align: center;
+        }
+
+        .section-header h2 {
+            font-size: 3rem;
+            margin-bottom: 60px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            padding: 40px;
+            text-align: left;
+            transition: var(--transition-medium);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .feature-card i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 24px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 16px;
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
 
         @media (max-width: 1024px) {
             .hero-section { flex-direction: column; text-align: center; justify-content: center; padding-top: 150px; }

@@ -10,67 +10,75 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="services/cryptoService.js"></script>
+    <script src="services/i18n.js"></script>
 </head>
 <body class="auth-page">
     <div class="auth-container animate-fade">
         <div class="auth-card glass-panel">
             <div class="brand">
                 <div class="logo">
-                    <i class="fas fa-user-plus"></i>
+                    <i class="fas fa-user-shield"></i>
                 </div>
-                <h1>Create <span>Identity</span></h1>
-                <p>Start your journey in the futurist workspace.</p>
+                <h1 data-i18n="auth.createIdentity">Create <span>Identity</span></h1>
+                <p data-i18n="auth.startJourney">Start your journey in the futurist workspace.</p>
+                <div class="e2ee-badge">
+                    <i class="fas fa-lock"></i>
+                    <span>E2EE Protected</span>
+                </div>
             </div>
 
             <form id="registerForm">
                 <div class="input-group">
-                    <label for="displayName">Display Name</label>
+                    <label for="displayName" data-i18n="auth.displayName">Display Name</label>
                     <div class="input-wrapper">
                         <i class="fas fa-user"></i>
-                        <input type="text" id="displayName" placeholder="John Doe" required>
+                        <input type="text" id="displayName" placeholder="John Doe" data-i18n="auth.displayName" required>
                     </div>
                 </div>
 
                 <div class="input-group">
-                    <label for="username">Username</label>
+                    <label for="username" data-i18n="auth.username">Username</label>
                     <div class="input-wrapper">
                         <i class="fas fa-tag"></i>
-                        <input type="text" id="username" placeholder="johndoe" required>
-                        <span id="usernameHint" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); font-size:0.8rem; color:var(--text-dim)">.stgo</span>
+                        <input type="text" id="username" placeholder="johndoe" data-i18n="auth.username" required>
                     </div>
                     <div id="suggestBox" class="suggestions"></div>
                 </div>
 
                 <div class="input-group">
-                    <label for="emailPrefix">New Email Identity</label>
+                    <label for="emailPrefix" data-i18n="auth.newIdentity">New Email Identity</label>
                     <div class="input-wrapper email-split">
                         <i class="fas fa-envelope"></i>
-                        <input type="text" id="emailPrefix" placeholder="identity" required>
+                        <input type="text" id="emailPrefix" placeholder="identity" data-i18n="auth.newIdentity" required>
                         <select id="emailDomain" required>
                             <option value="@stgo.mail">@stgo.mail</option>
-                            <option value="@futur.st">@futur.st</option>
+                            <option value="@stgo.io">@stgo.io</option>
                             <option value="@poteuxx.io">@poteuxx.io</option>
+                            <option value="@identity.io">@identity.io</option>
+                            <option value="@secure.io">@secure.io</option>
+                            <option value="@futur.st">@futur.st</option>
                             <option value="@st.gomail">@st.gomail</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="input-group">
-                    <label for="password">Password</label>
+                    <label for="password" data-i18n="auth.password">Password</label>
                     <div class="input-wrapper">
                         <i class="fas fa-lock"></i>
-                        <input type="password" id="password" placeholder="••••••••" required minlength="6">
+                        <input type="password" id="password" placeholder="••••••••" data-i18n="auth.password" required minlength="6">
                     </div>
                 </div>
 
                 <button type="submit" class="btn btn-primary w-full" id="regBtn">
-                    <span>Finalize Identity</span>
+                    <span data-i18n="auth.finalize">Finalize Identity</span>
                     <i class="fas fa-check"></i>
                 </button>
             </form>
 
             <div class="auth-footer">
-                <p>Already have an ID? <a href="login.html">Login here</a></p>
+                <p><span data-i18n="auth.alreadyHaveId">Already have an ID?</span> <a href="login.html" data-i18n="auth.loginHere">Login here</a></p>
             </div>
         </div>
     </div>
@@ -193,6 +201,20 @@
         .suggest-item:hover {
             border-color: var(--primary);
             background: var(--bg-glass);
+        }
+
+        .e2ee-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 12px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid #10b981;
+            color: #10b981;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            margin-top: 10px;
+            font-weight: 600;
         }
 
         .w-full { width: 100%; }

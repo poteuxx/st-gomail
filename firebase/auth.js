@@ -11,18 +11,38 @@ const authService = {
         displayName: displayName
       });
 
+      // Generate E2EE Key Pair
+      const keyPair = await window.cryptoService.generateKeyPair();
+
+      // Create Real World Email Bridge (for receiving external OTPs)
+      const domains1sec = ["1secmail.com", "1secmail.org", "1secmail.net"];
+      const randomDomain = domains1sec[Math.floor(Math.random() * domains1sec.length)];
+      const prefix = email.split('@')[0];
+      const realAlias = `${prefix}@${randomDomain}`;
+
       // Store extra data in Firestore
       await window.fb.db.collection('users').doc(user.uid).set({
         uid: user.uid,
         email: email,
         displayName: displayName,
         username: username,
+        publicKey: keyPair.publicKey,
+        realAlias: realAlias, // Standard real-world email bridge
         createdAt: window.fb.FieldValue.serverTimestamp(),
         settings: {
           theme: 'poteuxx-classic',
           language: 'en'
         }
       });
+
+      // Store Private Key securely (In this demo, we'll store it in localStorage 
+      // but in production it should be encrypted with a key derived from password)
+      localStorage.setItem(`stgo_priv_${email}`, keyPair.privateKey);
+
+      // Send Welcome Message
+      await authService.sendWelcomeMessage(email, displayName);
+
+      return user;
 
       return user;
     } catch (error) {
@@ -74,6 +94,26 @@ const authService = {
   // Check auth state
   onAuthStateInit: (callback) => {
     window.fb.auth.onAuthStateChanged(callback);
+  },
+
+  // Send Welcome Message
+  sendWelcomeMessage: async (email, displayName) => {
+    try {
+      const welcomeBody = `Hello ${displayName},\n\nWelcome to StGo-Mail! Your account has been successfully created with End-to-End Encryption enabled.\n\nYour communication is now secure and private. Our Pulsar Edition (2.1) brings you multi-language support and a faster experience.\n\nBest regards,\nThe StGo-Mail Team`;
+      
+      // Since it's the first message, we can send it unencrypted from system or encrypt it if we have the public key
+      // Let's use the mailService to send it.
+      await window.mailService.sendEmail({
+        from: 'system@stgo.mail',
+        fromName: 'StGo System',
+        to: email,
+        subject: 'Welcome to the Future of Mail',
+        body: welcomeBody,
+        isSystem: true // Flag to skip encryption check for system messages if needed
+      });
+    } catch (error) {
+      console.error("Welcome message error:", error);
+    }
   }
 };
 

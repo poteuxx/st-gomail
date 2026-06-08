@@ -1,0 +1,46 @@
+{
+    "landing": {
+        "title": "Le futur de la communication est ici.",
+        "subtitle": "Découvrez la plateforme de messagerie la plus avancée, sécurisée et futuriste jamais construite. Inspirée par Google, conçue pour la prochaine génération.",
+        "getStarted": "Commencer gratuitement",
+        "login": "Connexion",
+        "join": "Rejoindre",
+        "version": "Version 2.0 - Pulsar Edition",
+        "stats": {
+            "users": "Utilisateurs",
+            "uptime": "Disponibilité"
+        },
+        "featuresTitle": "Une intelligence inégalée."
+    },
+    "auth": {
+        "createIdentity": "Créer une identité",
+        "startJourney": "Commencez votre voyage dans l'espace de travail futuriste.",
+        "displayName": "Nom d'affichage",
+        "username": "Nom d'utilisateur",
+        "newIdentity": "Nouvelle identité e-mail",
+        "password": "Mot de passe",
+        "finalize": "Finaliser l'identité",
+        "alreadyHaveId": "Vous avez déjà un ID ?",
+        "loginHere": "Connectez-vous ici"
+    },
+    "inbox": {
+        "search": "Rechercher une identité...",
+        "compose": "Composer",
+        "folders": {
+            "inbox": "Boîte de réception",
+            "sent": "Envoyés",
+            "starred": "Favoris",
+            "trash": "Corbeille",
+            "spam": "Spam"
+        },
+        "noMessages": "Aucun message trouvé.",
+        "secureConnection": "Tunnel chiffré de bout en bout sécurisé actif",
+        "reader": {
+            "back": "Retour",
+            "reply": "Répondre",
+            "forward": "Transférer",
+            "delete": "Supprimer",
+            "encryptedNotice": "Ce message est chiffré de bout en bout."
+        }
+    }
+}
