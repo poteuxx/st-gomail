@@ -42,7 +42,8 @@ const authService = {
       // Send Welcome Message
       await authService.sendWelcomeMessage(email, displayName);
 
-      return user;
+      // Safety Sync: Wait for Firestore to propagate
+      await new Promise(resolve => setTimeout(resolve, 800));
 
       return user;
     } catch (error) {
@@ -55,14 +56,20 @@ const authService = {
   login: async (email, password) => {
     try {
       // Check if input is a username instead of email
-      let finalEmail = email;
-      if (!email.includes('@')) {
-        // Search for username in firestore
-        const snapshot = await window.fb.db.collection('users').where('username', '==', email).get();
-        if (snapshot.empty) {
-          throw new Error("User not found");
+      let finalEmail = email.trim();
+      if (!finalEmail.includes('@')) {
+        // Search for username/displayName in firestore (Case-Insensitive)
+        const snapshot = await window.fb.db.collection('users').get();
+        const found = snapshot.docs.find(doc => {
+            const d = doc.data();
+            return (d.username && d.username.toLowerCase() === finalEmail.toLowerCase()) || 
+                   (d.displayName && d.displayName.toLowerCase() === finalEmail.toLowerCase());
+        });
+
+        if (!found) {
+          throw new Error("User not found in secure directory");
         }
-        finalEmail = snapshot.docs[0].data().email;
+        finalEmail = found.data().email;
       }
 
       const userCredential = await window.fb.auth.signInWithEmailAndPassword(finalEmail, password);
