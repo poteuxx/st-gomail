@@ -20,6 +20,20 @@
     filter: drop-shadow(0 0 5px var(--primary-glow));
 }
 
+.active-identity {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.03);
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border-light);
+    margin-top: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
 .compose-btn {
     width: 100%;
     justify-content: flex-start;
