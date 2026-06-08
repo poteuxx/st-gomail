@@ -19,14 +19,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const userData = await window.authService.getCurrentUserData();
         if (userData) {
-            document.getElementById('userName').innerText = userData.displayName;
-            document.getElementById('displayEmail').innerText = userData.email;
+            const name = userData.displayName || userData.username || "User";
+            const email = userData.email;
+            
+            document.getElementById('userName').innerText = name;
+            document.getElementById('displayEmail').innerText = email;
             
             const emailFull = document.getElementById('userEmail');
-            emailFull.innerHTML = `${userData.email}<br><span style="color:var(--secondary); font-size:0.75rem">Bridge: ${userData.realAlias}</span>`;
+            emailFull.innerHTML = `${email}<br><span style="color:var(--secondary); font-size:0.75rem">Bridge: ${userData.realAlias || 'Configuring...'}</span>`;
 
             if (userData.avatar) {
                 document.getElementById('userAvatar').src = userData.avatar;
+            } else {
+                document.getElementById('userAvatar').src = `https://ui-avatars.com/api/?name=${name}&background=6c8cff&color=fff`;
             }
             startMailBridge(userData.realAlias);
         }
